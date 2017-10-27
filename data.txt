@@ -1,6 +1,78 @@
-527
-522
-1047
-+
+/**
+ * This class is the main view for the application. It is specified in app.js as the
+ * "mainView" property. That setting automatically applies the "viewport"
+ * plugin causing this view to become the body element (i.e., the viewport).
+ *
+ * TODO - Replace this content of this view to suite the needs of your application.
+ */
+Ext.define('extDemo.view.main.Main', {
+    extend: 'Ext.panel.Panel',
+    xtype: 'mainview',
+    title: 'connected',
+    requires:['extDemo.view.main.MainController',
+    'extDemo.store.Client'],
+    controller:'main',
+    manageHeight: false,
+    resizable: false,
+    listeners: {
+        render: function () {
+            Ext.getDoc().on('contextmenu', function(event) {
+                event.preventDefault();
+                console.log(event.getXY()[0]);
+                console.log(event.getXY()[1]);
+                var menu_list = new Ext.menu.Menu({
+                    items:[
+                        { text: 'Get input field value', handler: function() {
+                            var textFieldValue = Ext.getCmp('inputField').value;
+                            console.log(textFieldValue);}
+                        },
+                        { text: 'Delete', handler: function() {console.log('Delete')}}
+                    ]
+                });
+                var position = event.getXY();
+                menu_list.showAt(position);
 
-622
+            });
+        }
+    },
+    tbar:[
+        {
+            xtype:'textfield',
+            id:'inputField',
+            reference:'searchField',
+            fieldLabel:'',
+            margin:0,
+            cls:'styled-textfield'
+
+        },
+        {
+            xtype:'combobox',
+            id:'combo1',
+            margin:0,
+            reference:'comboOptions',
+            publishes:'value',
+            displayField:'name',
+            queryMode:'local',
+            editable:false,
+            forceSelection:true,
+            valueField: 'type',
+            value:'CN',
+            store: [
+                { type: 'CN', name: 'Account Number' },
+                { type: 'AN', name: 'Client Name' }
+            ],
+
+        },
+        {
+            xtype:'button',
+            iconCls:'fa fa-search',
+            style:{
+              borderRadius:'0px 20px 20px 0px',
+            },
+            listeners:{
+                click:'search',
+            }
+
+        }
+    ],
+});
